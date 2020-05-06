@@ -10,10 +10,37 @@
     <include
         layout="@layout/toolbar_layout"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="400dp"
+       android:gravity="center">
 
-    </TextView>
+       <TextView
+           android:id="@+id/scale_name"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Test Text"
+           android:textSize="50dp"
+           android:textColor="@color/colorPrimary"
+           android:layout_gravity="center">
+       </TextView>
+
+   </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:background="@android:color/holo_red_dark"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/start_and_stop"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="Start">
+        </Button>
+
+    </LinearLayout>
+
 
 </LinearLayout>

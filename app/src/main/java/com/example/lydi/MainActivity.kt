@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 
 class MainActivity : AppCompatActivity() {
 
     private val toolbar: Toolbar by lazy { findViewById<Toolbar>(R.id.toolBar) }
+    val scaleName = findViewById<TextView>(R.id.scale_name)
+    val startAndStop = findViewById<Button>(R.id.start_and_stop)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +26,9 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+
+
+    //MARK -> App bar
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_add -> createNew()
