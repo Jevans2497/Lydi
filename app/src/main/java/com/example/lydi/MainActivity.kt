@@ -11,24 +11,38 @@ import androidx.appcompat.widget.Toolbar
 class MainActivity : AppCompatActivity() {
 
     private val toolbar: Toolbar by lazy { findViewById<Toolbar>(R.id.toolBar) }
-    val scaleName = findViewById<TextView>(R.id.scale_name)
-    val startAndStop = findViewById<Button>(R.id.start_and_stop)
+    val scaleName by lazy { findViewById<TextView>(R.id.scale_name) }
+    val startAndStop by lazy { findViewById<Button>(R.id.start_and_stop) }
+    var isRunning = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        startAndStop.setOnClickListener {startAndStopClicked()}
     }
 
+    fun startAndStopClicked() {
+        if (!isRunning) startRunning() else stopRunning()
+    }
+
+    fun startRunning() {
+        isRunning = true
+        startAndStop.text = "Stop"
+    }
+
+    fun stopRunning() {
+        isRunning = false
+        startAndStop.text = "Start"
+    }
+
+    //MARK -> App bar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val menuInflater = menuInflater
         menuInflater.inflate(R.menu.app_bar_menu, menu)
         return true
     }
 
-
-
-    //MARK -> App bar
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_add -> createNew()
