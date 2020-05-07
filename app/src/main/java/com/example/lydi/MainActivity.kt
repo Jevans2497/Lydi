@@ -14,12 +14,13 @@ class MainActivity : AppCompatActivity() {
     val scaleName by lazy { findViewById<TextView>(R.id.scale_name) }
     val startAndStop by lazy { findViewById<Button>(R.id.start_and_stop) }
     var isRunning = false
+    val notes = mutableListOf("A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        startAndStop.setOnClickListener {startAndStopClicked()}
+        startAndStop.setOnClickListener { startAndStopClicked() }
     }
 
     fun startAndStopClicked() {
@@ -29,11 +30,21 @@ class MainActivity : AppCompatActivity() {
     fun startRunning() {
         isRunning = true
         startAndStop.text = "Stop"
+        startDisplayingScales()
     }
 
     fun stopRunning() {
         isRunning = false
         startAndStop.text = "Start"
+        stopDisplayingScales()
+    }
+
+    fun startDisplayingScales() {
+
+    }
+
+    fun stopDisplayingScales() {
+
     }
 
     //MARK -> App bar
