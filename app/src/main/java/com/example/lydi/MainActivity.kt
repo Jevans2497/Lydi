@@ -1,12 +1,14 @@
 package com.example.lydi
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,7 +16,10 @@ class MainActivity : AppCompatActivity() {
     val scaleName by lazy { findViewById<TextView>(R.id.scale_name) }
     val startAndStop by lazy { findViewById<Button>(R.id.start_and_stop) }
     var isRunning = false
-    val notes = mutableListOf("A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab")
+    val scaleManager = ScaleManager()
+    var selectedScales = mutableListOf<String>()
+
+    var timer = Timer(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,17 +35,22 @@ class MainActivity : AppCompatActivity() {
     fun startRunning() {
         isRunning = true
         startAndStop.text = "Stop"
-        startDisplayingScales()
+        selectedScales = scaleManager.selectedScales()
+        timer.scheduleAtFixedRate(0, 3000) {
+            startDisplayingScales()
+        }
     }
 
     fun stopRunning() {
         isRunning = false
         startAndStop.text = "Start"
+        timer.cancel()
+        timer = Timer(true)
         stopDisplayingScales()
     }
 
     fun startDisplayingScales() {
-
+        runOnUiThread { scaleName.text = selectedScales.random() }
     }
 
     fun stopDisplayingScales() {
