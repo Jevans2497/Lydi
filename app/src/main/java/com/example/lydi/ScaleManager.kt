@@ -18,8 +18,8 @@ class ScaleManager {
     fun selectedScales(): MutableList<String> {
         var selectedScales = mutableListOf<String>()
         for (scale in scales) {
-            val scaleToAdd = makeScale(scale)
-            selectedScales.addAll(scaleToAdd)
+            val scalesToAdd = makeScale(scale)
+            selectedScales.addAll(scalesToAdd)
         }
         return selectedScales
     }

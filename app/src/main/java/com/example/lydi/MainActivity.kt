@@ -1,5 +1,6 @@
 package com.example.lydi
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -76,7 +77,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun createNew() {
-        //Do nothing
+        val intent = Intent(this, ScaleSelectorActivity::class.java)
+        startActivity(intent)
     }
 
     fun load() {
