@@ -31,15 +31,36 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         app:layout_constraintTop_toBottomOf="@+id/setName"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:background="@drawable/customborder"/>
 
-    <NumberPicker
-        android:id="@+id/seconds_picker"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:layout_constraintTop_toBottomOf="@+id/enharmonic_switch"
-        android:layout_marginTop="15dp">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/enharmonic_switch"
+        android:background="@drawable/customborder">
 
-    </NumberPicker>
+        <TextView
+            android:id="@+id/seconds_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Seconds per scale"
+            android:layout_marginLeft="20dp"
+            android:textColor="@android:color/black"
+            android:textSize="26sp">
+        </TextView>
+
+        <NumberPicker
+            android:id="@+id/seconds_picker"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="-15dp"
+            android:theme="@style/NumberPickerText">
+        </NumberPicker>
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
