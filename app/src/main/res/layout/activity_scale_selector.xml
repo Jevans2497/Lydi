@@ -21,33 +21,34 @@
     <Switch
         android:id="@+id/enharmonic_switch"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_gravity="center"
         android:text="Enharmonics"
         android:textSize="26sp"
         android:checked="true"
-        android:textOff="Off"
-        android:textOn="On"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         app:layout_constraintTop_toBottomOf="@+id/setName"
         android:layout_marginTop="15dp"
-        android:background="@drawable/customborder"/>
+        android:background="@drawable/customborder"
+        android:backgroundTint="@color/background"/>
 
     <LinearLayout
+        android:id="@+id/seconds_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/enharmonic_switch"
-        android:background="@drawable/customborder">
+        android:layout_marginTop="10dp"
+        android:background="@drawable/customborder"
+        android:backgroundTint="@color/background"
+        >
 
         <TextView
             android:id="@+id/seconds_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Seconds per scale"
-            android:layout_marginLeft="20dp"
             android:textColor="@android:color/black"
+            android:gravity="center"
             android:textSize="26sp">
         </TextView>
 
@@ -55,10 +56,27 @@
             android:id="@+id/seconds_picker"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="-15dp"
+            android:layout_marginLeft="140dp"
             android:theme="@style/NumberPickerText">
         </NumberPicker>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/scales_selector_layout"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintTop_toBottomOf="@id/seconds_layout"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
 
     </LinearLayout>
 
