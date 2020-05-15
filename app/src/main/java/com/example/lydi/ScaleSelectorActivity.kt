@@ -1,5 +1,6 @@
 package com.example.lydi
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,21 +34,34 @@ class ScaleSelectorActivity : AppCompatActivity() {
     }
 }
 
-class ScaleSelectorAdapter(private val myDataset: MutableList<String>) : RecyclerView.Adapter<ScaleSelectorAdapter.ScaleSelectorViewHolder>() {
+class ScaleSelectorAdapter(val myDataset: MutableList<String>) : RecyclerView.Adapter<ScaleSelectorAdapter.ScaleSelectorViewHolder>() {
+
+    var checkedScales = mutableListOf<String>()
+
+    inner class ScaleSelectorViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+        val checkBox: CheckBox = view.findViewById(R.id.scale_selector_checkbox)
+
+        init {
+            view.setOnClickListener { checkBox.isChecked = !checkBox.isChecked }
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                val scaleName = myDataset[adapterPosition]
+                if (isChecked) checkedScales.add(scaleName)
+                else {
+                    if (checkedScales.contains(scaleName)) checkedScales.remove(scaleName)
+                }
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScaleSelectorAdapter.ScaleSelectorViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.scale_selector_list_item, parent, false)
         return ScaleSelectorViewHolder(view)
     }
 
-    class ScaleSelectorViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        val checkBox: CheckBox = view.findViewById(R.id.scale_selector_checkbox)
-    }
-
     override fun onBindViewHolder(holder: ScaleSelectorViewHolder, position: Int) {
-        holder.checkBox.text = myDataset[position]
-        holder.checkBox.setOnCheckedChangeListener(null)
-        holder.checkBox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener())
+        val scaleName = myDataset[position]
+        holder.checkBox.text = scaleName
+        holder.checkBox.isChecked = checkedScales.contains(scaleName)
     }
 
     override fun getItemCount() = myDataset.size
