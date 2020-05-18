@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     val scaleName by lazy { findViewById<TextView>(R.id.scale_name) }
     val startAndStop by lazy { findViewById<Button>(R.id.start_and_stop) }
     var isRunning = false
-    val scaleManager = ScaleManager()
+    val scaleManager = ScaleSetManager()
     var selectedScales = mutableListOf<String>()
 
     var timer = Timer(true)
