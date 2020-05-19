@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,23 +15,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_scale_selector.*
 
-
-class ScaleSelectorActivity : AppCompatActivity() {
+class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
 
     var prefs: Prefs? = null
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
     lateinit var nameEditText: EditText
     lateinit var enharmonicSwitch: Switch
     lateinit var secondsNumberPicker: NumberPicker
     lateinit var saveButton: Button
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
     var allScales = ScaleSetManager().allScales
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scale_selector)
         prefs = Prefs(this)
+        setupSaveButton()
         setupRecyclerView()
         nameEditText = findViewById(R.id.setName)
         enharmonicSwitch = findViewById(R.id.enharmonic_switch)
@@ -39,7 +40,7 @@ class ScaleSelectorActivity : AppCompatActivity() {
 
     fun setupRecyclerView() {
         viewManager = LinearLayoutManager(this)
-        viewAdapter = ScaleSelectorAdapter(allScales)
+        viewAdapter = ScaleSelectorAdapter(allScales, this)
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -48,16 +49,23 @@ class ScaleSelectorActivity : AppCompatActivity() {
     }
 
     fun setupSaveButton() {
-        saveButton = findViewById(R.id.save)
+        saveButton = findViewById(R.id.save_button)
         saveButton.isEnabled = false
         saveButton.setBackgroundColor(ContextCompat.getColor(this, R.color.background))
         saveButton.setOnClickListener { saveClicked() }
     }
 
-    fun enableSave() {
+    override fun enableSave() {
         if (!saveButton.isEnabled) {
             saveButton.isEnabled = true
             saveButton.setBackgroundColor(Color.parseColor("#99ff99"))
+        }
+    }
+
+    override fun disableSave() {
+        if (saveButton.isEnabled) {
+            saveButton.isEnabled = false
+            saveButton.setBackgroundColor(ContextCompat.getColor(this, R.color.background))
         }
     }
 
@@ -66,9 +74,15 @@ class ScaleSelectorActivity : AppCompatActivity() {
     }
 }
 
-class ScaleSelectorAdapter(val myDataset: MutableList<String>) : RecyclerView.Adapter<ScaleSelectorAdapter.ScaleSelectorViewHolder>() {
+interface CheckBoxInterface {
+    fun enableSave()
+    fun disableSave()
+}
+
+class ScaleSelectorAdapter(val myDataset: MutableList<String>, checkBoxListener: CheckBoxInterface) : RecyclerView.Adapter<ScaleSelectorAdapter.ScaleSelectorViewHolder>() {
 
     var checkedScales = mutableListOf<String>()
+    val listener = checkBoxListener
 
     inner class ScaleSelectorViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val checkBox: CheckBox = view.findViewById(R.id.scale_selector_checkbox)
@@ -78,11 +92,12 @@ class ScaleSelectorAdapter(val myDataset: MutableList<String>) : RecyclerView.Ad
             checkBox.setOnCheckedChangeListener { _, isChecked ->
                 val scaleName = myDataset[adapterPosition]
                 if (isChecked) {
-                    ScaleSelectorActivity().enableSave()
+                    listener.enableSave()
                     checkedScales.add(scaleName)
                 }
                 else {
                     if (checkedScales.contains(scaleName)) checkedScales.remove(scaleName)
+                    if (checkedScales.count() == 0) listener.disableSave()
                 }
             }
         }

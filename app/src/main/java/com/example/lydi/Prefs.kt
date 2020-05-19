@@ -13,4 +13,6 @@ class Prefs (context: Context) {
         editor?.putString(setName, setData)
         editor?.apply()
     }
+
+//    https://blog.teamtreehouse.com/making-sharedpreferences-easy-with-kotlin
 }
