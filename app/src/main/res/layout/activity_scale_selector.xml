@@ -31,7 +31,7 @@
         android:background="@drawable/customborder"
         android:backgroundTint="@color/background"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/seconds_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -39,8 +39,7 @@
         app:layout_constraintTop_toBottomOf="@id/enharmonic_switch"
         android:layout_marginTop="10dp"
         android:background="@drawable/customborder"
-        android:backgroundTint="@color/background"
-        >
+        android:backgroundTint="@color/background">
 
         <TextView
             android:id="@+id/seconds_text"
@@ -49,18 +48,23 @@
             android:text="Seconds per scale"
             android:textColor="@android:color/black"
             android:gravity="center"
-            android:textSize="26sp">
+            android:textSize="26sp"
+            android:layout_alignParentLeft="true">
         </TextView>
 
-        <NumberPicker
-            android:id="@+id/seconds_picker"
+        <EditText
+            android:id="@+id/seconds_edit_text"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="140dp"
-            android:theme="@style/NumberPickerText">
-        </NumberPicker>
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="2"
+            android:hint="7"
+            android:textSize="32dp">
+        </EditText>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/scales_selector_layout"
@@ -90,7 +94,8 @@
         android:layout_marginTop="15dp"
         android:text="Save"
         android:textSize="22sp"
-        android:theme="@drawable/rounded_button">
+        android:theme="@android:style/Widget.Holo.Light.Button"
+        android:background="@drawable/rounded_button">
     </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

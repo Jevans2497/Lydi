@@ -1,26 +1,20 @@
 package com.example.lydi
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_scale_selector.*
 
 class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
 
     var prefs: Prefs? = null
     lateinit var nameEditText: EditText
     lateinit var enharmonicSwitch: Switch
-    lateinit var secondsNumberPicker: NumberPicker
+    lateinit var secondsEditText: EditText
     lateinit var saveButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -30,14 +24,20 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scale_selector)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         prefs = Prefs(this)
-        setupSaveButton()
-        setupRecyclerView()
-        nameEditText = findViewById(R.id.setName)
-        enharmonicSwitch = findViewById(R.id.enharmonic_switch)
-        secondsNumberPicker = findViewById(R.id.seconds_picker)
+        setupViews()
     }
 
+    fun setupViews() {
+        setupSaveButton()
+        setupRecyclerView()
+        setupNameEditText()
+        setupEnharmonicSwitch()
+        setupSecondsEditText()
+    }
+
+    //MARK: Recycler view
     fun setupRecyclerView() {
         viewManager = LinearLayoutManager(this)
         viewAdapter = ScaleSelectorAdapter(allScales, this)
@@ -48,6 +48,7 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         }
     }
 
+    //MARK: Save Button
     fun setupSaveButton() {
         saveButton = findViewById(R.id.save_button)
         saveButton.isEnabled = false
@@ -70,49 +71,28 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     }
 
     fun saveClicked() {
-        prefs?.storeSet("Scale set 1", "TEST")
+        val scaleSetName = nameEditText.text.toString()
+        prefs?.storeSet(scaleSetName, "TEST")
+    }
+
+    //MARK: Name Edit Text
+    fun setupNameEditText() {
+        nameEditText = findViewById(R.id.setName)
+        nameEditText.hint = "Scale Set 1"
+    }
+
+    //MARK: Enharmonic Switch
+    fun setupEnharmonicSwitch() {
+        enharmonicSwitch = findViewById(R.id.enharmonic_switch)
+    }
+
+    //MARK: Seconds Number Picker
+    fun setupSecondsEditText() {
+        secondsEditText = findViewById(R.id.seconds_edit_text)
     }
 }
 
 interface CheckBoxInterface {
     fun enableSave()
     fun disableSave()
-}
-
-class ScaleSelectorAdapter(val myDataset: MutableList<String>, checkBoxListener: CheckBoxInterface) : RecyclerView.Adapter<ScaleSelectorAdapter.ScaleSelectorViewHolder>() {
-
-    var checkedScales = mutableListOf<String>()
-    val listener = checkBoxListener
-
-    inner class ScaleSelectorViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        val checkBox: CheckBox = view.findViewById(R.id.scale_selector_checkbox)
-
-        init {
-            view.setOnClickListener { checkBox.isChecked = !checkBox.isChecked }
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                val scaleName = myDataset[adapterPosition]
-                if (isChecked) {
-                    listener.enableSave()
-                    checkedScales.add(scaleName)
-                }
-                else {
-                    if (checkedScales.contains(scaleName)) checkedScales.remove(scaleName)
-                    if (checkedScales.count() == 0) listener.disableSave()
-                }
-            }
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScaleSelectorAdapter.ScaleSelectorViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.scale_selector_list_item, parent, false)
-        return ScaleSelectorViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ScaleSelectorViewHolder, position: Int) {
-        val scaleName = myDataset[position]
-        holder.checkBox.text = scaleName
-        holder.checkBox.isChecked = checkedScales.contains(scaleName)
-    }
-
-    override fun getItemCount() = myDataset.size
 }

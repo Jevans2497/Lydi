@@ -8,8 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="NumberPickerText">
-        <item name="android:textSize">22sp</item>
-    </style>
-
 </resources>
