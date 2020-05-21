@@ -8,10 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.lang.Exception
 
 class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
 
-    var prefs: Prefs? = null
     lateinit var nameEditText: EditText
     lateinit var enharmonicSwitch: Switch
     lateinit var secondsEditText: EditText
@@ -25,7 +29,6 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scale_selector)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-        prefs = Prefs(this)
         setupViews()
     }
 
@@ -71,8 +74,7 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     }
 
     fun saveClicked() {
-        val scaleSetName = nameEditText.text.toString()
-        prefs?.storeSet(scaleSetName, "TEST")
+        writeToMemory()
     }
 
     //MARK: Name Edit Text
@@ -89,6 +91,28 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     //MARK: Seconds Number Picker
     fun setupSecondsEditText() {
         secondsEditText = findViewById(R.id.seconds_edit_text)
+    }
+
+    //MARK: Saving data
+    fun writeToMemory() {
+        try {
+            val fileout = openFileOutput("testfile.txt", 0)
+            val outputWriter = OutputStreamWriter(fileout)
+            outputWriter.write(nameEditText.text.toString())
+            outputWriter.close()
+            Toast.makeText(getBaseContext(), "File saved successfully!", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) { e.printStackTrace() }
+    }
+
+    fun readFromMemory() {
+        try {
+            val fileIn = FileInputStream("testfile.txt")
+            val inputReader = InputStreamReader(fileIn)
+
+            //https://www.journaldev.com/9383/android-internal-storage-example-tutorial
+            var inputBuffer: Array<Char> = Array<Char>()
+
+        }
     }
 }
 
