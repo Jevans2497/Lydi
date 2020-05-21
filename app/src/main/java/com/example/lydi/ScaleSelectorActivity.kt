@@ -52,21 +52,21 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     fun setupSaveButton() {
         saveButton = findViewById(R.id.save_button)
         saveButton.isEnabled = false
-        saveButton.setBackgroundColor(ContextCompat.getColor(this, R.color.background))
+        saveButton.setBackgroundResource(R.drawable.rounded_button_disabled)
         saveButton.setOnClickListener { saveClicked() }
     }
 
     override fun enableSave() {
         if (!saveButton.isEnabled) {
             saveButton.isEnabled = true
-            saveButton.setBackgroundColor(Color.parseColor("#99ff99"))
+            saveButton.setBackgroundResource(R.drawable.rounded_button_enabled)
         }
     }
 
     override fun disableSave() {
         if (saveButton.isEnabled) {
             saveButton.isEnabled = false
-            saveButton.setBackgroundColor(ContextCompat.getColor(this, R.color.background))
+            saveButton.setBackgroundResource(R.drawable.rounded_button_disabled)
         }
     }
 
