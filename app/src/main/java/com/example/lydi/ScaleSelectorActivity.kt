@@ -70,7 +70,9 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
 
     fun saveClicked() {
         val internalStorage = InternalStorage()
-        internalStorage.writeToMemory(" EMPTY ")
+        val scaleSet = makeScaleSet()
+        
+//        internalStorage.writeToMemory(" EMPTY ")
     }
 
     //MARK: Name Edit Text
@@ -87,6 +89,19 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     //MARK: Seconds Number Picker
     fun setupSecondsEditText() {
         secondsEditText = findViewById(R.id.seconds_edit_text)
+    }
+
+    fun getSelectedScales(): MutableList<String> {
+        return mutableListOf("boop")
+    }
+
+    fun makeScaleSet(): ScaleSet {
+        val name = nameEditText.text.toString()
+        val enharmonicsEnabled = enharmonicSwitch.isEnabled
+        val timerSeconds = Integer.parseInt(secondsEditText.text.toString())
+        val selectedScales =  getSelectedScales()
+        var scaleSet: ScaleSet = ScaleSet(name, enharmonicsEnabled, timerSeconds, selectedScales)
+        return scaleSet
     }
 }
 

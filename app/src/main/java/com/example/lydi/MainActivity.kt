@@ -82,6 +82,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun load() {
-        //Do nothing
+        //Load all the scale sets in a recyclerview that pops up
     }
 }
