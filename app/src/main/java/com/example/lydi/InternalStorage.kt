@@ -1,8 +1,8 @@
 package com.example.lydi
 
+import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_scale_selector.*
 import java.io.BufferedReader
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -11,7 +11,7 @@ import java.lang.StringBuilder
 
 class InternalStorage: AppCompatActivity() {
 
-    private val file = "scaleSets.txt"
+    var file = "scalesets"
     val gson = Gson()
 
     //MARK: Saving data

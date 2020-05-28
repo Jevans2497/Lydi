@@ -19,13 +19,14 @@ class ScaleSelectorAdapter(val myDataset: MutableList<String>, checkBoxListener:
             checkBox.setOnCheckedChangeListener { _, isChecked ->
                 val scaleName = myDataset[adapterPosition]
                 if (isChecked) {
-                    listener.enableSave()
                     checkedScales.add(scaleName)
+                    listener.enableSave()
                 }
                 else {
                     if (checkedScales.contains(scaleName)) checkedScales.remove(scaleName)
                     if (checkedScales.count() == 0) listener.disableSave()
                 }
+                listener.updateCheckedScales(checkedScales)
             }
         }
     }
@@ -39,6 +40,10 @@ class ScaleSelectorAdapter(val myDataset: MutableList<String>, checkBoxListener:
         val scaleName = myDataset[position]
         holder.checkBox.text = scaleName
         holder.checkBox.isChecked = checkedScales.contains(scaleName)
+    }
+
+    fun getAllCheckedScales(): MutableList<String> {
+        return checkedScales
     }
 
     override fun getItemCount() = myDataset.size

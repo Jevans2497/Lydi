@@ -1,11 +1,14 @@
 package com.example.lydi
 
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
+import androidx.annotation.IntegerRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -19,6 +22,8 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     var allScales = ScaleSetManager().allScales
+    var checkedScales = mutableListOf<String>()
+    val internalStorage = InternalStorage()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,11 +73,15 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         }
     }
 
+    override fun updateCheckedScales(scales: MutableList<String>) {
+        checkedScales = scales
+    }
+
     fun saveClicked() {
-        val internalStorage = InternalStorage()
         val scaleSet = makeScaleSet()
-        
-//        internalStorage.writeToMemory(" EMPTY ")
+        val updatedScaleSets = appendScaleSetToScaleSets(scaleSet)
+        internalStorage.writeToMemory(updatedScaleSets)
+        Log.d("TEST", "asdfadsf")
     }
 
     //MARK: Name Edit Text
@@ -91,15 +100,34 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         secondsEditText = findViewById(R.id.seconds_edit_text)
     }
 
-    fun getSelectedScales(): MutableList<String> {
-        return mutableListOf("boop")
+    fun appendScaleSetToScaleSets(scaleSet: ScaleSet): ScaleSets {
+        val currentScaleSets = internalStorage.readFromMemory()
+        if (currentScaleSets == null) {
+            var newSets = ScaleSets()
+            newSets.sets.add(scaleSet)
+            return newSets
+        } else {
+            currentScaleSets.sets.add(scaleSet)
+            return currentScaleSets
+        }
     }
 
     fun makeScaleSet(): ScaleSet {
-        val name = nameEditText.text.toString()
-        val enharmonicsEnabled = enharmonicSwitch.isEnabled
-        val timerSeconds = Integer.parseInt(secondsEditText.text.toString())
-        val selectedScales =  getSelectedScales()
+        var name = nameEditText.text.toString()
+        if (name == "") { name = nameEditText.hint.toString() }
+
+        var enharmonicsEnabled = enharmonicSwitch.isEnabled
+
+        var timerSecondsString = secondsEditText.text.toString()
+        var timerSeconds = 0
+
+        if (timerSecondsString.isDigitsOnly() && timerSecondsString != "") {
+            timerSeconds = Integer.parseInt(timerSecondsString)
+        } else {
+            timerSeconds = 7
+        }
+
+        val selectedScales =  checkedScales
         var scaleSet: ScaleSet = ScaleSet(name, enharmonicsEnabled, timerSeconds, selectedScales)
         return scaleSet
     }
@@ -108,4 +136,5 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
 interface CheckBoxInterface {
     fun enableSave()
     fun disableSave()
+    fun updateCheckedScales(scales: MutableList<String>)
 }
