@@ -24,11 +24,13 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     var allScales = ScaleSetManager().allScales
     var checkedScales = mutableListOf<String>()
     val internalStorage = InternalStorage()
+    var preexistingScaleSets: ScaleSets? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scale_selector)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        preexistingScaleSets = internalStorage.readFromMemory(this.baseContext)
         setupViews()
     }
 
@@ -81,12 +83,15 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         val scaleSet = makeScaleSet()
         val updatedScaleSets = appendScaleSetToScaleSets(scaleSet)
         InternalStorage().writeToMemory(this.baseContext, updatedScaleSets)
+        finish()
     }
 
     //MARK: Name Edit Text
     fun setupNameEditText() {
         nameEditText = findViewById(R.id.setName)
-        nameEditText.hint = "Scale Set 1"
+        var num = preexistingScaleSets?.sets?.size
+        if (num == null) { num = 1 }
+        nameEditText.hint = "Scale Set " + num.toString()
     }
 
     //MARK: Enharmonic Switch
@@ -99,8 +104,9 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         secondsEditText = findViewById(R.id.seconds_edit_text)
     }
 
+    //MARK: Making scale sets
     fun appendScaleSetToScaleSets(scaleSet: ScaleSet): ScaleSets {
-        val currentScaleSets = internalStorage.readFromMemory(this.baseContext)
+        val currentScaleSets = preexistingScaleSets
         if (currentScaleSets == null) {
             var newSets = ScaleSets()
             newSets.sets.add(scaleSet)

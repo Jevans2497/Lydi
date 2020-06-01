@@ -19,14 +19,21 @@ class MainActivity : AppCompatActivity() {
     var isRunning = false
     val scaleManager = ScaleSetManager()
     var selectedScales = mutableListOf<String>()
+    var internalStorage = InternalStorage()
+    var preexistingScaleSets: ScaleSets? = null
 
     var timer = Timer(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        preexistingScaleSets = internalStorage.readFromMemory(this.baseContext)
+        addDefaultScaleSetIfPreexistingScalesEmpty()
         setSupportActionBar(toolbar)
         startAndStop.setOnClickListener { startAndStopClicked() }
+
+        //HERE -----------
+        //Get rid of the default scale sets and instead throw a toast if there isn't any preloaded
     }
 
     fun startAndStopClicked() {
@@ -83,5 +90,16 @@ class MainActivity : AppCompatActivity() {
 
     fun load() {
         //Load all the scale sets in a recyclerview that pops up
+    }
+
+    private fun addDefaultScaleSetIfPreexistingScalesEmpty() {
+        if (preexistingScaleSets?.sets == null) {
+            val defaultSet = ScaleSet(name = "All Scales", enharmonicsEnabled = true, timerSeconds = 7, selectedScales = ScaleSetManager().allScales)
+            val defaultScaleSets = ScaleSets()
+            defaultScaleSets.sets.add(defaultSet)
+            internalStorage.writeToMemory(this.baseContext, defaultScaleSets)
+            preexistingScaleSets = defaultScaleSets
+        }
+
     }
 }
