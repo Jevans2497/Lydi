@@ -23,7 +23,7 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     private lateinit var viewManager: RecyclerView.LayoutManager
     var allScales = ScaleSetManager().allScales
     var checkedScales = mutableListOf<String>()
-//    val internalStorage = InternalStorage()
+    val internalStorage = InternalStorage()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,8 +80,7 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     fun saveClicked() {
         val scaleSet = makeScaleSet()
         val updatedScaleSets = appendScaleSetToScaleSets(scaleSet)
-//        internalStorage.writeToMemory(updatedScaleSets)
-        writeToMemory(this.baseContext, updatedScaleSets)
+        InternalStorage().writeToMemory(this.baseContext, updatedScaleSets)
     }
 
     //MARK: Name Edit Text
@@ -101,8 +100,7 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     }
 
     fun appendScaleSetToScaleSets(scaleSet: ScaleSet): ScaleSets {
-//        val currentScaleSets = internalStorage.readFromMemory()
-        val currentScaleSets = readFromMemory()
+        val currentScaleSets = internalStorage.readFromMemory(this.baseContext)
         if (currentScaleSets == null) {
             var newSets = ScaleSets()
             newSets.sets.add(scaleSet)
