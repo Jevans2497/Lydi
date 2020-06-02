@@ -21,7 +21,6 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    var allScales = ScaleSetManager().allScales
     var checkedScales = mutableListOf<String>()
     val internalStorage = InternalStorage()
     var preexistingScaleSets: ScaleSets? = null
@@ -121,7 +120,7 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         var name = nameEditText.text.toString()
         if (name == "") { name = nameEditText.hint.toString() }
 
-        var enharmonicsEnabled = enharmonicSwitch.isEnabled
+        var enharmonicsEnabled = enharmonicSwitch.isChecked
 
         var timerSecondsString = secondsEditText.text.toString()
         var timerSeconds = 0

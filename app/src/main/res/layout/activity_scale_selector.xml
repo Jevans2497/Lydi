@@ -54,7 +54,7 @@
 
         <EditText
             android:id="@+id/seconds_edit_text"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:gravity="center"

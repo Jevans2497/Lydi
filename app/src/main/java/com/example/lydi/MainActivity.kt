@@ -2,10 +2,12 @@ package com.example.lydi
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import java.util.*
@@ -17,23 +19,23 @@ class MainActivity : AppCompatActivity() {
     val scaleName by lazy { findViewById<TextView>(R.id.scale_name) }
     val startAndStop by lazy { findViewById<Button>(R.id.start_and_stop) }
     var isRunning = false
-    val scaleManager = ScaleSetManager()
-    var selectedScales = mutableListOf<String>()
     var internalStorage = InternalStorage()
     var preexistingScaleSets: ScaleSets? = null
+    var currentScaleSet: ScaleSet? = null
 
     var timer = Timer(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        preexistingScaleSets = internalStorage.readFromMemory(this.baseContext)
-        addDefaultScaleSetIfPreexistingScalesEmpty()
         setSupportActionBar(toolbar)
         startAndStop.setOnClickListener { startAndStopClicked() }
+    }
 
-        //HERE -----------
-        //Get rid of the default scale sets and instead throw a toast if there isn't any preloaded
+    override fun onStart() {
+        super.onStart()
+        preexistingScaleSets = internalStorage.readFromMemory(this.baseContext)
+        setDefaultScaleSet()
     }
 
     fun startAndStopClicked() {
@@ -41,11 +43,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startRunning() {
-        isRunning = true
-        startAndStop.text = "Stop"
-        selectedScales = scaleManager.selectedScales()
-        timer.scheduleAtFixedRate(0, 3000) {
-            startDisplayingScales()
+        if (currentScaleSet == null) {
+            showNoScaleSetSelectedToast()
+        } else {
+            isRunning = true
+            startAndStop.text = "Stop"
+            timer.scheduleAtFixedRate(0, currentScaleSet!!.timerSeconds.toLong() * 1000) {
+                displayScales()
+            }
         }
     }
 
@@ -54,15 +59,16 @@ class MainActivity : AppCompatActivity() {
         startAndStop.text = "Start"
         timer.cancel()
         timer = Timer(true)
-        stopDisplayingScales()
     }
 
-    fun startDisplayingScales() {
-        runOnUiThread { scaleName.text = selectedScales.random() }
+    fun displayScales() {
+        runOnUiThread { scaleName.text = currentScaleSet!!.selectedScales.random() }
     }
 
-    fun stopDisplayingScales() {
-
+    fun showNoScaleSetSelectedToast() {
+        Toast.makeText(applicationContext,"Invalid Scaleset",Toast.LENGTH_SHORT).show()
+        val toast = Toast.makeText(applicationContext, "You must load in a scale set or create a new one", Toast.LENGTH_LONG)
+        toast.show()
     }
 
     //MARK -> App bar
@@ -92,14 +98,9 @@ class MainActivity : AppCompatActivity() {
         //Load all the scale sets in a recyclerview that pops up
     }
 
-    private fun addDefaultScaleSetIfPreexistingScalesEmpty() {
-        if (preexistingScaleSets?.sets == null) {
-            val defaultSet = ScaleSet(name = "All Scales", enharmonicsEnabled = true, timerSeconds = 7, selectedScales = ScaleSetManager().allScales)
-            val defaultScaleSets = ScaleSets()
-            defaultScaleSets.sets.add(defaultSet)
-            internalStorage.writeToMemory(this.baseContext, defaultScaleSets)
-            preexistingScaleSets = defaultScaleSets
+    fun setDefaultScaleSet() {
+        if (preexistingScaleSets != null) {
+            currentScaleSet = preexistingScaleSets!!.sets.last()
         }
-
     }
 }

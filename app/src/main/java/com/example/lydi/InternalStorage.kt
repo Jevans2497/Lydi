@@ -14,6 +14,7 @@ class InternalStorage() {
             context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
                 val jsonScaleSets = convertObjectToGSON(scaleSets)
                 it.write(jsonScaleSets.toByteArray())
+                Log.d("NEW SET", jsonScaleSets)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -21,10 +22,14 @@ class InternalStorage() {
     }
 
     fun readFromMemory(context: Context): ScaleSets? {
-        val fileName = "ScaleSets.txt"
-        val file = File(context.filesDir, fileName)
-        val contents = file.readText()
-        return createObjectFromGSON(contents)
+        try {
+            val fileName = "ScaleSets.txt"
+            val file = File(context.filesDir, fileName)
+            val contents = file.readText()
+            return createObjectFromGSON(contents)
+        } catch (e: Exception) {
+            return null
+        }
     }
 
     fun convertObjectToGSON(scaleSets: ScaleSets): String {

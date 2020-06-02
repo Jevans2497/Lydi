@@ -19,10 +19,11 @@
            android:id="@+id/scale_name"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:text="Test Text"
+           android:text="C Major"
            android:textSize="50dp"
            android:textColor="@color/colorPrimary"
-           android:layout_gravity="center">
+           android:layout_gravity="center"
+           android:gravity="center">
        </TextView>
 
    </LinearLayout>
