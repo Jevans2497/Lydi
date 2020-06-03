@@ -2,7 +2,6 @@ package com.example.lydi
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -95,7 +94,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun load() {
-        //Load all the scale sets in a recyclerview that pops up
+        val intent = Intent(this, LoadMenuActivity::class.java)
+        startActivity(intent)
     }
 
     fun setDefaultScaleSet() {

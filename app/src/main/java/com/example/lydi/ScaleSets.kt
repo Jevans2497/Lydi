@@ -25,7 +25,6 @@ class ScaleSet {
     constructor(name: String, enharmonicsEnabled: Boolean, timerSeconds: Int, selectedScales: MutableList<String>) {
         this.name = name
         this.enharmonicsEnabled = enharmonicsEnabled
-
         if (enharmonicsEnabled) { addEnharmonics() } else removeEnharmonics()
         this.timerSeconds = timerSeconds
         this.selectedScales = makeScales(selectedScales)

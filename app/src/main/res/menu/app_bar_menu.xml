@@ -8,12 +8,11 @@
         android:id="@+id/action_load"
         android:title="Load Set"
         android:icon="@mipmap/ic_load"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_add"
         android:title="New Set"
         android:icon="@mipmap/ic_add"
-        app:showAsAction="ifRoom"/>
-
+        app:showAsAction="ifRoom" />
 </menu>
