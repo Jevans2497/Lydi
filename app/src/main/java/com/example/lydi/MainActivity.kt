@@ -1,5 +1,6 @@
 package com.example.lydi
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -34,7 +35,15 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         preexistingScaleSets = internalStorage.readFromMemory(this.baseContext)
-        setDefaultScaleSet()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                currentScaleSet = getSetFromName(data?.getStringExtra("selectedSet"))
+            }
+        }
     }
 
     fun startAndStopClicked() {
@@ -90,17 +99,26 @@ class MainActivity : AppCompatActivity() {
 
     fun createNew() {
         val intent = Intent(this, ScaleSelectorActivity::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, 1)
     }
 
     fun load() {
         val intent = Intent(this, LoadMenuActivity::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, 1)
     }
 
     fun setDefaultScaleSet() {
         if (preexistingScaleSets != null) {
             currentScaleSet = preexistingScaleSets!!.sets.last()
+        }
+    }
+
+    private fun getSetFromName(name: String?): ScaleSet? {
+        val set = preexistingScaleSets?.sets?.first { it.name == name }
+        if (set == null) {
+            return preexistingScaleSets?.sets?.last()
+        } else {
+            return set
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.lydi
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -82,6 +83,9 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         val scaleSet = makeScaleSet()
         val updatedScaleSets = appendScaleSetToScaleSets(scaleSet)
         InternalStorage().writeToMemory(this.baseContext, updatedScaleSets)
+        val intent = Intent()
+        intent.putExtra("selectedSet", scaleSet.name)
+        setResult(RESULT_OK, intent)
         finish()
     }
 
