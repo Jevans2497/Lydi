@@ -3,6 +3,7 @@ package com.example.lydi
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -35,13 +36,14 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         preexistingScaleSets = internalStorage.readFromMemory(this.baseContext)
+        currentScaleSet = preexistingScaleSets?.sets?.last()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                currentScaleSet = getSetFromName(data?.getStringExtra("selectedSet"))
+                    currentScaleSet = getSetFromName(data?.getStringExtra("selectedSet"))
             }
         }
     }
@@ -52,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     fun startRunning() {
         if (currentScaleSet == null) {
-            showNoScaleSetSelectedToast()
+            showNoScaleSetSelectedToast("You must create or load in a scale set")
         } else {
             isRunning = true
             startAndStop.text = "Stop"
@@ -73,10 +75,8 @@ class MainActivity : AppCompatActivity() {
         runOnUiThread { scaleName.text = currentScaleSet!!.selectedScales.random() }
     }
 
-    fun showNoScaleSetSelectedToast() {
-        Toast.makeText(applicationContext,"Invalid Scaleset",Toast.LENGTH_SHORT).show()
-        val toast = Toast.makeText(applicationContext, "You must load in a scale set or create a new one", Toast.LENGTH_LONG)
-        toast.show()
+    fun showNoScaleSetSelectedToast(message: String) {
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
     //MARK -> App bar
@@ -103,8 +103,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun load() {
-        val intent = Intent(this, LoadMenuActivity::class.java)
-        startActivityForResult(intent, 1)
+        stopRunning()
+        if (preexistingScaleSets == null) {
+            showNoScaleSetSelectedToast("There are no saved scale sets")
+        } else {
+            val intent = Intent(this, LoadMenuActivity::class.java)
+            startActivityForResult(intent, 1)
+        }
     }
 
     fun setDefaultScaleSet() {

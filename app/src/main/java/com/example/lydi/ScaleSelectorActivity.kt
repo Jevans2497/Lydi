@@ -7,6 +7,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
+import android.widget.Toast
 import androidx.annotation.IntegerRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
@@ -80,21 +81,19 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
     }
 
     fun saveClicked() {
-        val scaleSet = makeScaleSet()
-        val updatedScaleSets = appendScaleSetToScaleSets(scaleSet)
-        InternalStorage().writeToMemory(this.baseContext, updatedScaleSets)
-        val intent = Intent()
-        intent.putExtra("selectedSet", scaleSet.name)
-        setResult(RESULT_OK, intent)
-        finish()
+        if (isNameValid()) {
+            val scaleSet = makeScaleSet()
+            val updatedScaleSets = appendScaleSetToScaleSets(scaleSet)
+            InternalStorage().writeToMemory(this.baseContext, updatedScaleSets)
+            finish()
+        } else {
+            nameInvalidToast()
+        }
     }
 
     //MARK: Name Edit Text
     fun setupNameEditText() {
         nameEditText = findViewById(R.id.setName)
-        var num = preexistingScaleSets?.sets?.size
-        if (num == null) { num = 1 }
-        nameEditText.hint = "Scale Set " + num.toString()
     }
 
     //MARK: Enharmonic Switch
@@ -122,7 +121,6 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
 
     fun makeScaleSet(): ScaleSet {
         var name = nameEditText.text.toString()
-        if (name == "") { name = nameEditText.hint.toString() }
 
         var enharmonicsEnabled = enharmonicSwitch.isChecked
 
@@ -138,6 +136,23 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         val selectedScales =  checkedScales
         var scaleSet: ScaleSet = ScaleSet(name, enharmonicsEnabled, timerSeconds, selectedScales)
         return scaleSet
+    }
+
+    private fun isNameValid(): Boolean {
+        var nameEditTextString = nameEditText.text.toString()
+        val nameNotEmpty = !(nameEditTextString == "" || nameEditTextString == null)
+        var containsName = preexistingScaleSets?.sets?.map { it.name }?.contains(nameEditTextString)
+        var nameIsUnique = false
+        if (containsName != null) {
+            nameIsUnique = !containsName
+        } else {
+            containsName = true
+        }
+        return nameNotEmpty && nameIsUnique
+    }
+
+    private fun nameInvalidToast() {
+        Toast.makeText(applicationContext, "Scale set must have a unique name", Toast.LENGTH_SHORT).show()
     }
 }
 
