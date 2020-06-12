@@ -146,7 +146,7 @@ class ScaleSelectorActivity : AppCompatActivity(), CheckBoxInterface {
         if (containsName != null) {
             nameIsUnique = !containsName
         } else {
-            containsName = true
+            nameIsUnique = true
         }
         return nameNotEmpty && nameIsUnique
     }

@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val toolbar: Toolbar by lazy { findViewById<Toolbar>(R.id.toolBar) }
     val scaleName by lazy { findViewById<TextView>(R.id.scale_name) }
     val startAndStop by lazy { findViewById<Button>(R.id.start_and_stop) }
+    val setName by lazy { findViewById<TextView>(R.id.scale_set_name)}
     var isRunning = false
     var internalStorage = InternalStorage()
     var preexistingScaleSets: ScaleSets? = null
@@ -35,8 +38,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        setName.visibility = View.INVISIBLE
         preexistingScaleSets = internalStorage.readFromMemory(this.baseContext)
         currentScaleSet = preexistingScaleSets?.sets?.last()
+        if (currentScaleSet != null) {
+            setName.visibility = View.VISIBLE
+            setName.text = currentScaleSet!!.name
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -44,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                     currentScaleSet = getSetFromName(data?.getStringExtra("selectedSet"))
+                    setName.text = currentScaleSet!!.name
             }
         }
     }
