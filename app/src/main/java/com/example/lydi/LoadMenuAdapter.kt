@@ -1,5 +1,6 @@
 package com.example.lydi
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,10 @@ class LoadMenuAdapter(val myDataset: MutableList<String>, loadMenuListener: Load
             view.setOnClickListener {
                 val setName = myDataset[adapterPosition]
                 listener.setSelected(setName)
+            }
+            view.setOnLongClickListener{
+                listener.showEditDeleteAlert()
+                true
             }
         }
     }
