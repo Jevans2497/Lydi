@@ -20,10 +20,6 @@ class LoadMenuAdapter(val myDataset: MutableList<String>, loadMenuListener: Load
                 val setName = myDataset[adapterPosition]
                 listener.setSelected(setName)
             }
-            view.setOnLongClickListener{
-                listener.showEditDeleteAlert()
-                true
-            }
         }
     }
 

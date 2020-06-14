@@ -49,31 +49,27 @@ class LoadMenuActivity: AppCompatActivity(), LoadMenuInterface {
         finish()
     }
 
-    override fun showEditDeleteAlert() {
-        val dialogBuilder = AlertDialog.Builder(this)
+    override fun showEditDeleteMenu() {
+//        val dialogBuilder = AlertDialog.Builder(this)
+//
+//        dialogBuilder.setMessage("What would you like to do?")
+//            .setCancelable(true)
+//            .setPositiveButton("Edit", DialogInterface.OnClickListener {
+//                    dialog, id -> finish()
+//            })
+//            .setNegativeButton("Delete", DialogInterface.OnClickListener {
+//                    dialog, id -> dialog.cancel()
+//            })
+//
+//        val alert = dialogBuilder.create()
+//        alert.setTitle("Options")
+//        alert.show()
 
-        dialogBuilder.setMessage("What would you like to do?")
-            // if the dialog is cancelable
-            .setCancelable(false)
-            // positive button text and action
-            .setPositiveButton("Proceed", DialogInterface.OnClickListener {
-                    dialog, id -> finish()
-            })
-            // negative button text and action
-            .setNegativeButton("Cancel", DialogInterface.OnClickListener {
-                    dialog, id -> dialog.cancel()
-            })
-
-        // create dialog box
-        val alert = dialogBuilder.create()
-        // set title for alert dialog box
-        alert.setTitle("AlertDialogExample")
-        // show alert dialog
-        alert.show()
+        registerForContextMenu(recyclerView)
     }
 }
 
 interface LoadMenuInterface {
     fun setSelected(name: String)
-    fun showEditDeleteAlert()
+    fun showEditDeleteMenu()
 }
