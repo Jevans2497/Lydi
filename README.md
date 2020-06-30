@@ -1,7 +1,7 @@
 # Lydi
 My first Android app! For musicians who want some help with practicing their scales. Currently a WiP
 
-Users are first taken to the main screen seen below. They then can either load in a previously created scale set, or create a new one. Once they've created and selected a scale set, they are shown the scales randomly at the time interval that they chose (in seconds).
+When trying to learn my scales, I found that playing them in a random order was the best way to memorize them as indenpendent entities. I created this app so that I could pick any set of scales I wanted to work on and then have it randomly show me a scale every X amount of seconds. I also added a feature that makes it possible to save and load scale sets. 
 
 ![Main Screen](Screenshots/MainScreen.png?raw=true)
 
